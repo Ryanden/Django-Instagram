@@ -127,4 +127,4 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 # User-uploaded 접근 URL
-MEDIA_URL = '/media/'
+MEDIA_URL = '/media1234/'

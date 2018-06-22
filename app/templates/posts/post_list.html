@@ -3,6 +3,13 @@
 {% block content %}
     <h1>블로그 화면</h1>
         {% for post in post_list %}
-            {{post}}
+            <div>
+                <div>
+                    {{post.author.username}}
+                </div>
+                <div>
+                    <img width="100%" src="{{post.photo.url}}" alt="">
+                </div>
+            </div>
         {% endfor %}
 {% endblock %}
