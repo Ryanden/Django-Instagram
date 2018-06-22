@@ -4,11 +4,9 @@
     <h1>블로그 화면</h1>
         {% for post in post_list %}
             <div>
+                <div>{{post.author.username}}</div>
                 <div>
-                    {{post.author.username}}
-                </div>
-                <div>
-                    <img width="100%" src="{{post.photo.url}}" alt="">
+                    <img style="max-width:100%" src="{{post.photo.url}}" alt="">
                 </div>
             </div>
         {% endfor %}

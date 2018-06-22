@@ -9,6 +9,20 @@
 </head>
 <body>
     <div>
+        <h1>Instagram</h1>
+
+
+
+        {% if user.is_authenticated %}
+        <div>
+            로그아웃
+        </div>
+        {% else %}
+        <div>
+            <a href="{% url 'members:login' %}">로그인</a>
+        </div>
+        {% endif %}
+
         {% block content %}
         {% endblock %}
     </div>
