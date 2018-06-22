@@ -1,0 +1,8 @@
+
+{% extends 'base.html' %}
+{% block content %}
+    <h1>블로그 화면</h1>
+        {% for post in post_list %}
+            {{post}}
+        {% endfor %}
+{% endblock %}
