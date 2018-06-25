@@ -25,11 +25,11 @@
 
     <button type="submit" form="form1" value="Submit">회원가입</button>
 
-    {% if errors%}
+    {% if context.errors%}
     <ul>
-        {% for errors in errors %}
+        {% for error in context.errors %}
         <li>
-            <p>{{errors}}</p>
+            <p>{{error}}</p>
         </li>
         {% endfor %}
     </ul>

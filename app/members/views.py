@@ -49,7 +49,7 @@ def logout_view(request):
         return redirect('posts:post-list')
 
 
-def signup(request):
+def signup_bak(request):
 
     context = {
         'errors': [],
@@ -64,14 +64,6 @@ def signup(request):
 
         context['username'] = username
         context['email'] = email
-
-        # for key, value in locals().items():
-        #     if not value:
-        #         context['errors'].append(f'{key} 을 넣어주세요')
-        #     print('key:', key, 'value:', value)
-        #
-        # for item in context['errors']:
-        #     print(item)
 
         required_fields = {
             'username': {
@@ -94,15 +86,6 @@ def signup(request):
                     required_fields[field_name]['verbose_name']
                 ))
 
-        for item in context['errors']:
-            print(item)
-
-        # required_fields = ['username', 'email', 'password', 'password2']
-        #
-        # for field_name in required_fields:
-        #     print('field_name', field_name)
-        #     print('local()[field_name]', locals()[field_name])
-
         # 아이디가 중복일때
         if User.objects.filter(username=username).exists():
             context['errors'].append('이미 존재하는 아이디입니다')
@@ -118,5 +101,7 @@ def signup(request):
 
             return redirect('index')
 
+        return render(request, 'members/signup_bak.html', locals())
+
     # get 요청일 경우
-    return render(request, 'members/signup.html', locals())
+    return render(request, 'members/signup_bak.html', locals())
