@@ -5,6 +5,7 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
     <title>Instagram</title>
 </head>
 <body>
@@ -14,6 +15,7 @@
 
 
         {% if user.is_authenticated %}
+        <p>{{user}}로 로그인중</p>
         <div>
             <form action="{% url 'members:logout' %}" method="POST">
                 {% csrf_token %}
@@ -23,7 +25,7 @@
         {% else %}
         <div>
             <a href="{% url 'members:login' %}">로그인</a>
-            <a href="{% url 'members:signup' %}">회원가입</a>
+            <a href="{% url 'members:signup2' %}">회원가입</a>
         </div>
         {% endif %}
 

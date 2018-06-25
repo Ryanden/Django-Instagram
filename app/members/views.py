@@ -4,6 +4,8 @@ from django.shortcuts import render, redirect
 
 # User 클래스를 가져올때는 get_user_model()
 # Foreign Key 에 User 모델을 지정할때에는 settings.AUTO_USR_MODEL
+from members.forms import SignupForm
+
 User = get_user_model()
 
 # Create your views here.
@@ -47,6 +49,41 @@ def logout_view(request):
     else:
         print('로그아웃 실패')
         return redirect('posts:post-list')
+
+
+def signup(request):
+
+    if request.method == 'POST':
+        form = SignupForm(request.POST)
+
+        # 에러메시지가 없음
+        if form.is_valid():
+
+            username = form.cleaned_data['username']
+            email = form.cleaned_data['email']
+            password = form.cleaned_data['password']
+            password2 = form.cleaned_data['password2']
+
+            print('유저네임이야야야야야야')
+
+            user = User.objects.create_user(username=username, password=password, email=email)
+            login(request, user)
+            return redirect('index')
+
+        context = {
+            'form': form,
+        }
+
+        # 에러메세지가 있음.
+        return render(request, 'members/signup.html', context)
+    else:
+        form = SignupForm()
+
+        context = {
+            'form': form,
+        }
+
+        return render(request, 'members/signup.html', context)
 
 
 def signup_bak(request):
