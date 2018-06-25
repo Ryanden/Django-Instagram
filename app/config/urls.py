@@ -23,7 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('posts/', include('posts.urls')),
     path('members/', include('members.urls')),
-    path('', views.index),
+    path('', views.index, name='index'),
     # path('media/<str:path>', admin.site.urls),
 ] + static(
     prefix=settings.MEDIA_URL,

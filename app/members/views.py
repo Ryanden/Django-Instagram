@@ -1,6 +1,10 @@
-from django.contrib.auth import authenticate, login, logout
-from django.http import HttpResponse
+from django.contrib.auth import authenticate, login, logout, get_user_model
+
 from django.shortcuts import render, redirect
+
+# User 클래스를 가져올때는 get_user_model()
+# Foreign Key 에 User 모델을 지정할때에는 settings.AUTO_USR_MODEL
+User = get_user_model()
 
 # Create your views here.
 
@@ -43,3 +47,76 @@ def logout_view(request):
     else:
         print('로그아웃 실패')
         return redirect('posts:post-list')
+
+
+def signup(request):
+
+    context = {
+        'errors': [],
+    }
+
+    if request.method == 'POST':
+
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        password2 = request.POST.get('password2')
+
+        context['username'] = username
+        context['email'] = email
+
+        # for key, value in locals().items():
+        #     if not value:
+        #         context['errors'].append(f'{key} 을 넣어주세요')
+        #     print('key:', key, 'value:', value)
+        #
+        # for item in context['errors']:
+        #     print(item)
+
+        required_fields = {
+            'username': {
+                'verbose_name': '아이디',
+            },
+            'email': {
+                'verbose_name': '이메일',
+            },
+            'password': {
+                'verbose_name': '비밀번호',
+            },
+            'password2': {
+                'verbose_name': '비밀번호 확인',
+            },
+        }
+
+        for field_name in required_fields.keys():
+            if not locals()[field_name]:
+                context['errors'].append('{}을 채워주세요.'.format(
+                    required_fields[field_name]['verbose_name']
+                ))
+
+        for item in context['errors']:
+            print(item)
+
+        # required_fields = ['username', 'email', 'password', 'password2']
+        #
+        # for field_name in required_fields:
+        #     print('field_name', field_name)
+        #     print('local()[field_name]', locals()[field_name])
+
+        # 아이디가 중복일때
+        if User.objects.filter(username=username).exists():
+            context['errors'].append('이미 존재하는 아이디입니다')
+
+        # 비밀번호가 서로 다를때
+        if password != password2:
+            context['errors'].append('패스워드가 일치하지 않습니다.')
+
+        if not context['errors']:
+            user = User.objects.create_user(username=username, password=password, email=email)
+
+            login(request, user)
+
+            return redirect('index')
+
+    # get 요청일 경우
+    return render(request, 'members/signup.html', locals())
