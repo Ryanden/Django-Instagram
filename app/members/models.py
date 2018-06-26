@@ -1,17 +1,7 @@
 from django.db import models
-
+from django.contrib.auth.models import AbstractUser
 # Create your models here.
 
 
-class InstagramUser (models.Model):
-
-    name = models.CharField(max_length=50)
-
-
-class UserInfo (models.Model):
-
-    user = models.ForeignKey(
-        InstagramUser,
-        on_delete=models.CASCADE,
-    )
-
+class User(AbstractUser):
+    pass
