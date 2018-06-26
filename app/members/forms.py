@@ -44,27 +44,31 @@ class SignupForm(forms.Form):
     def clean_username(self):
 
         username = self.cleaned_data['username']
-
         reputation = User.objects.filter(username=username).exists()
 
         if reputation:
-            print('아이디 중복')
-            raise ValidationError('중복값 있음')
+            raise ValidationError('이미 사용중인 아이디입니다.')
 
         return username
 
-    def clean_password(self):
-
+    def clean(self):
+        super().clean()
         password = self.cleaned_data['password']
-
-        password2 = self.cleaned_data.get('password2')
+        password2 = self.cleaned_data['password2']
 
         if password != password2:
-            print('비밀번호가 일치하지 않음')
-            raise ValidationError('비밀번호 불일치')
+            self.add_error('password2', '비밀번호와 비밀번호 확인의 값이 일치하지 않습니다.')
 
-        return password
+        return self.cleaned_data
 
+    def signup(self):
+        username = self.cleaned_data['username']
+        email = self.cleaned_data['email']
+        password = self.cleaned_data['password']
+
+        user = User.objects.create_user(username=username, password=password, email=email)
+
+        return user
 
 
 

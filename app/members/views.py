@@ -55,35 +55,18 @@ def signup(request):
 
     if request.method == 'POST':
         form = SignupForm(request.POST)
-
         # 에러메시지가 없음
         if form.is_valid():
-
-            username = form.cleaned_data['username']
-            email = form.cleaned_data['email']
-            password = form.cleaned_data['password']
-            password2 = form.cleaned_data['password2']
-
-            print('유저네임이야야야야야야')
-
-            user = User.objects.create_user(username=username, password=password, email=email)
+            user = form.signup()
             login(request, user)
             return redirect('index')
-
-        context = {
-            'form': form,
-        }
-
-        # 에러메세지가 있음.
-        return render(request, 'members/signup.html', context)
+    # get 요청일 때 빈 form 을 전달해서 렌더링
     else:
         form = SignupForm()
-
-        context = {
-            'form': form,
-        }
-
-        return render(request, 'members/signup.html', context)
+    context = {
+        'form': form,
+    }
+    return render(request, 'members/signup.html', context)
 
 
 def signup_bak(request):
