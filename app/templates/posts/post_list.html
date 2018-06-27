@@ -1,12 +1,72 @@
 
 {% extends 'base.html' %}
 {% block content %}
-        {% for post in post_list %}
-            <div>
-                <div>{{post.author.username}}</div>
-                <div>
-                    <img style="max-width:100%" src="{{post.photo.url}}" alt="">
+
+
+
+    <div class="container">
+        {% if user.is_authenticated %}
+        <div class="row layout-header">
+            <div class="col-md-1">
+                <a href="{% url 'posts:post-create' %}" class="btn btn-primary">글쓰기</a>
+            </div>
+            <div class="col-md-1">
+                <form action="{% url 'members:logout' %}" method="POST">
+                {% csrf_token %}
+                    <button type="submit" class="btn btn-success">로그아웃</button>
+                </form>
+            </div>
+
+            <div class="offset-md-8 col-md-1">
+                <form action="{% url 'members:withdraw' %}" method="POST">
+                {% csrf_token %}
+                    <button type="submit" class="btn btn-danger" id="withdraw">회원탈퇴</button>
+                </form>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="row">
+            {% for post in post_list %}
+            <div class="card col-sm-12">
+                <div class="card-body">
+                    <h3 class="card-title">작성자 : {{post.author.username}}</h3>
+                    <h4 class="card-text">등록일 : {{post.created_at}}</h4>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <a href="{% url 'posts:post-detail' post.id %}">
+                                <img class="post-image-size" src="{{post.photo.url}}" alt="">
+                            </a>
+                        </div>
+                        <div class="col-sm-6">
+                            <textarea class="layout-text">내용 : {{post.content}}</textarea>
+                        </div>
+                    </div>
                 </div>
             </div>
-        {% endfor %}
+            {% endfor %}
+        </div>
+
+    </div>
+
+<script>
+
+    (function () {
+
+
+    }());
+
+    function withdraw () {
+
+            alert('회원탈퇴 완료');
+        };
+
+    var temp = document.getElementById('withdraw');
+
+    temp.addEventListener('click', e => {
+        withdraw();
+    })
+
+</script>
+
 {% endblock %}

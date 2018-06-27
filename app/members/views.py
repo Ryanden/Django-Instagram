@@ -39,22 +39,14 @@ def login_view(request):
 
 def logout_view(request):
 
-    if request.method == 'POST':
-
-        print('로그아웃 성공')
-        logout(request)
-
-        return redirect('posts:post-list')
-
-    else:
-        print('로그아웃 실패')
-        return redirect('posts:post-list')
+    logout(request)
+    return redirect('index')
 
 
 def signup(request):
 
     if request.method == 'POST':
-        form = SignupForm(request.POST)
+        form = SignupForm(request.POST, request.FILES)
         # 에러메시지가 없음
         if form.is_valid():
             user = form.signup()
@@ -67,6 +59,13 @@ def signup(request):
         'form': form,
     }
     return render(request, 'members/signup.html', context)
+
+
+def withdraw(request):
+
+    request.user.delete()
+
+    return redirect('index')
 
 
 def signup_bak(request):

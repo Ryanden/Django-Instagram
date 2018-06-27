@@ -1,6 +1,15 @@
-<h1> 블로그 저자 : {{post_detail.author}}</h1>
-<h3> 블로그 내용 : {{post_detail.content}}</h3>
-<h3> 작성일자 : {{post_detail.created_at}}</h3>
+{% extends 'base.html' %}
 
-<p>media/{{post_detail.photo}}</p>
-<image src="media/{{post_detail.photo}}" alt="{{post_detail.photo}}"></image>
+{% block content %}
+
+<h1> 블로그 저자 : {{post_detail.author}}</h1>
+    <h3> 블로그 내용 : {{post_detail.content}}</h3>
+    <h3> 작성일자 : {{post_detail.created_at}}</h3>
+<image src="{{post_detail.photo.url}}" alt="{{post_detail.photo}}"></image>
+
+<form action="{% url 'posts:post-delete' pk=post_detail.id %}" method="POST">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">글삭제</button>
+</form>
+
+{% endblock %}
