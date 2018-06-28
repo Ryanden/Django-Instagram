@@ -17,10 +17,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
 
-
-print('BASE_DIR', BASE_DIR)
-print('MEDIA_ROOT', MEDIA_ROOT)
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
@@ -31,6 +27,15 @@ SECRET_KEY = 'n4&-#xvf6)cxq2ou9ma(lk_nc-ni)2v3z@04b4k+*1%1q%=f0m'
 DEBUG = True
 
 ALLOWED_HOSTS = []
+
+# Auth
+AUTH_USER_MODEL = 'members.User'
+LOGIN_URL = 'members:login'
+
+# STATIC
+
+STATIC_DIR = os.path.join(BASE_DIR, 'static')
+STATICFILES_DIRS = (STATIC_DIR,)
 
 
 # Application definition
@@ -97,8 +102,6 @@ DATABASES = {
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
-
-AUTH_USER_MODEL = 'members.User'
 
 AUTH_PASSWORD_VALIDATORS = [
     {

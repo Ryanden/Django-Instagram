@@ -61,7 +61,7 @@
                 Instagram
             </a>
         </div>
-
+        <a class="btn btn-primary" href="{% url 'posts:post-create' %}">글쓰기</a>
         {% if user.is_authenticated %}
         <h3>{{user}}로 로그인중</h3>
 

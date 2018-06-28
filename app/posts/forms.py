@@ -8,9 +8,22 @@ from posts.models import Post
 User = get_user_model()
 
 
+class PostModelForm(forms.ModelForm):
+    # 필드를 직접정의 하지 않음.
+    class Meta:
+        model = Post
+        fields = ['photo', 'content']
+
+
 class PostForm(forms.Form):
 
-    image = forms.ImageField()
+    image = forms.ImageField(
+        widget=forms.FileInput(
+            attrs={
+                'class': 'form-control'
+            }
+        )
+    )
     content = forms.CharField(
         widget=forms.Textarea(
             attrs={
@@ -26,8 +39,10 @@ class PostForm(forms.Form):
         content = self.cleaned_data['content']
         photo = self.cleaned_data['image']
 
-        Post.objects.create(
+        post = Post.objects.create(
             author=user,
             photo=photo,
             content=content,
         )
+
+        return post

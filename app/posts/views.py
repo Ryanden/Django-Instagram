@@ -1,8 +1,12 @@
-from django.shortcuts import render, redirect
-from members.models import User
+from django.contrib.auth.decorators import login_required
+from django.core.exceptions import PermissionDenied
+from django.http import HttpResponseNotAllowed
+from django.shortcuts import render, redirect, get_object_or_404
 
 # Create your views here.
-from posts.forms import PostForm
+from django.views.decorators.http import require_POST
+
+from posts.forms import PostForm, PostModelForm
 from .models import Post
 
 
@@ -31,6 +35,31 @@ def post_detail(request, pk):
 def post_create(request):
 
     if request.method == 'POST':
+        form = PostModelForm(request.POST, request.FILES)
+
+        post = form.save(commit=False)
+
+        post.author = request.user
+
+        post.save()
+
+        return redirect('posts:post-list')
+
+    form = PostModelForm()
+
+    context = {
+        'form': form
+    }
+
+    return render(request, 'posts/post_create.html', context)
+
+
+
+
+@login_required()
+def post_create_with_form(request):
+
+    if request.method == 'POST':
 
         form = PostForm(request.POST, request.FILES)
 
@@ -38,11 +67,9 @@ def post_create(request):
 
             print('유효함')
 
-            form.upload_file(request.user)
+            post = form.upload_file(request.user)
 
-            # file = Post(request.FILES['image'])
-
-            return redirect('posts:post-list')
+            return redirect('posts:post-detail', pk=post.pk)
 
     else:
 
@@ -56,24 +83,41 @@ def post_create(request):
     return render(request, 'posts/post_create.html', context)
 
 
+@require_POST
+@login_required
 def post_delete(request, pk):
 
-    if request.method == 'POST':
+    # another method
 
-        post = Post.objects.get(id=pk)
+    # if request.method != 'POST':
+    #     return HttpResponseNotAllowed()
+    # if not request.user.is_authenticated:
+    #     return redirect('members:login')
+
+    post = get_object_or_404(Post, pk=pk)
+
+    user = post.author
+
+    if user != request.user:
+        raise PermissionDenied('지울 권한이 없습니다.')
+
+    else:
+        post.delete()
+
+    return redirect('posts:post-list')
+
+
+def post_delete_bak(request, pk):
+
+    if request.method == 'POST':
+        post = get_object_or_404(Post, pk=pk)
 
         user = post.author
 
-        print('현재유저:', request.user)
-        print('글작성자:', user)
+        if user != request.user:
+            raise PermissionDenied('지울 권한이 없습니다.')
 
-        print(request.user)
-
-        if user == request.user:
-            print('같은유저')
-
-            post.delete()
         else:
-            print('다른유저')
+            post.delete()
 
-    return redirect('index')
+    return redirect('posts:post-list')

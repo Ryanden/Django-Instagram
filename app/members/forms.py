@@ -6,6 +6,10 @@ from django.core.exceptions import ValidationError
 User = get_user_model()
 
 
+class SignupModelForm(forms.ModelForm):
+    pass
+
+
 class SignupForm(forms.Form):
 
     username = forms.CharField(
@@ -95,23 +99,29 @@ class SignupForm(forms.Form):
         return self.cleaned_data
 
     def signup(self):
-        username = self.cleaned_data['username']
-        email = self.cleaned_data['email']
-        password = self.cleaned_data['password']
-        image_profile = self.cleaned_data['image_profile']
-        introduction = self.cleaned_data['introduction']
-        gender = self.cleaned_data['gender']
-        site = self.cleaned_data['site']
+        fields = [
+            'username',
+            'email',
+            'password',
+            'img-profile',
+            'introduction',
+            'site',
+        ]
 
-        user = User.objects.create_user(
-            username=username,
-            password=password,
-            email=email,
-            img_profile=image_profile,
-            introduction=introduction,
-            gender=gender,
-            site=site,
-        )
+        # create_user_dict = {key: value for key, value in self.cleaned_data.items() if key in fields}
+
+        # def check(item):
+        #     return item[0] in fields
+
+        # create_user_dict = {}
+
+        # create_user_dict = dict(filter(check, self.cleaned_data.items()))
+
+        create_user_dict = dict(filter(lambda item: item[0] in fields, self.cleaned_data.items()))
+
+        print(create_user_dict)
+
+        user = User.objects.create_user(**create_user_dict)
 
         return user
 
