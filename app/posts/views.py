@@ -7,7 +7,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_POST
 
 from posts.forms import PostForm, PostModelForm
-from .models import Post
+from .models import Post, Comment
 
 
 def post_list(request):
@@ -26,7 +26,7 @@ def post_detail(request, pk):
     post = Post.objects.get(pk=pk)
 
     context = {
-        'post_detail': post
+        'post': post
     }
 
     return render(request, 'posts/post_detail.html', context)
@@ -54,6 +54,21 @@ def post_create(request):
     return render(request, 'posts/post_create.html', context)
 
 
+def comment_create(request, pk):
+
+    if request.method == 'POST':
+
+        post = Post.objects.get(pk=pk)
+
+        Comment.objects.create(
+            post=post,
+            user=request.user,
+            content=request.POST.get('comment')
+        )
+
+        return redirect('posts:post-detail', post.pk)
+
+    return render(request, 'posts/post_detail.html')
 
 
 @login_required()

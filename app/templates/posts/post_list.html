@@ -6,6 +6,9 @@
 
     <div class="container">
         {% if user.is_authenticated %}
+
+        <h3>{{user}}로 로그인중</h3>
+
         <div class="row layout-header">
             <div class="col-md-1">
                 <form action="{% url 'members:logout' %}" method="POST">
