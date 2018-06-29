@@ -7,7 +7,9 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_POST
 
 from posts.forms import PostForm, PostModelForm
-from .models import Post, Comment
+
+from .models.post import Post
+from .models.comment import Comment
 
 
 def post_list(request):

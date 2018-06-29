@@ -135,3 +135,13 @@ def signup_bak(request):
 
     # get 요청일 경우
     return render(request, 'members/signup_bak.html', locals())
+
+
+def follow_toggle(request):
+    """
+    Get 요청은 처리하지 않음
+    Post 요청일 때,
+
+    :param request:
+    :return:
+    """
