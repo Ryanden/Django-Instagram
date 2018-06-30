@@ -27,7 +27,15 @@
                 <button type="submit" class="btn btn-success">댓글 등록</button>
             </form>
             {% for comment in post.my_comment.all %}
-                <p>{{ comment }}</p>
+                <div class="row">
+                    <p class="float-left">{{ comment }}</p>
+                    <form class="float-left" action="{% url 'posts:comment-delete' post.pk comment.pk %}" method="POST">
+                    {% csrf_token %}
+
+                        <button type="submit" class="delete-btn">X</button>
+                    </form>
+                </div>
+
             {% endfor %}
 
             <form class="" action="{% url 'posts:post-delete' pk=post.id %}" method="POST">

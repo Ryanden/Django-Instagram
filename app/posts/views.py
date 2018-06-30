@@ -73,6 +73,18 @@ def comment_create(request, pk):
     return render(request, 'posts/post_detail.html')
 
 
+def comment_delete(request, post_pk, comment_pk):
+
+    if request.method == 'POST':
+        post = Post.objects.get(pk=post_pk)
+
+        comment = post.my_comment.get(pk=comment_pk)
+
+        if comment.user == request.user:
+            comment.delete()
+
+    return redirect('posts:post-detail', post_pk)
+
 @login_required()
 def post_create_with_form(request):
 

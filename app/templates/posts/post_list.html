@@ -27,10 +27,10 @@
         {% endif %}
 
             {% for post in post_list %}
-            <div class="card col-sm-12">
+            <div class="card col-sm-12 post-layout">
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-sm-12">
+                    <div class="row post-header">
+                        <div class="col-sm-4">
                             {% if post.author.img_profile %}
                             <img class="rounded-circle float-left" style="width:50px; height:50px;" src="{{ post.author.img_profile.url }}" alt="">
 
@@ -38,12 +38,12 @@
                             {% load static %}
                             <img class="rounded-circle float-left" style="width:50px; height:50px;" src="{% static 'images/blank_user.jpg' %}" alt="">
                             {% endif %}
-                            <h3 class="card-title">작성자 : {{post.author.username}}</h3>
-                            <h4 class="card-text float-left ml-10">등록일 : {{post.created_at}}</h4>
-                            <form action="" method="POST">
+                            <h3 class="card-title layout-user-name">{{post.author.username}}</h3>
+                            <form action="" method="POST" class="follow-btn">
                             {% csrf_token %}
-                                <button type="submit" class="btn btn-outline-primary ml-10">+ follow</button>
+                                <button type="submit" class="btn btn-outline-primary ml-10">+follow</button>
                             </form>
+
                         </div>
                     </div>
 
