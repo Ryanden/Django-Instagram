@@ -13,13 +13,13 @@ class Comment(models.Model):
     post = models.ForeignKey(
         Post,
         on_delete=models.CASCADE,
-        related_name='my_comment',
+        related_name='comment',
     )
 
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='my_user'
+        related_name='user'
     )
 
     content = models.TextField(null=True)
@@ -28,3 +28,11 @@ class Comment(models.Model):
 
     def __str__(self):
         return f'{self.user} : {self.content}'
+
+    @property
+    def post_context(self):
+        return f'{self.content}'
+
+    @property
+    def username(self):
+        return f'{self.user}'

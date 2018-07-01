@@ -4,6 +4,8 @@ from django.test import TestCase, TransactionTestCase
 
 # Create your tests here.
 from members.exception import RelationNotExist, DuplicateRelationException
+from posts.models import Post, Comment
+from posts.models.comment_like import CommentLike
 
 User = get_user_model()
 
@@ -68,3 +70,5 @@ class RelationTestCase(TransactionTestCase):
 
         with self.assertRaises(RelationNotExist):
             u1.unfollow(u2)
+
+

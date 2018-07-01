@@ -10,6 +10,12 @@
         <h3>{{user}}로 로그인중</h3>
 
         <div class="row layout-header">
+
+            <div class="col-md-1">
+                <a class="btn btn-primary" href="{% url 'posts:post-create' %}">글쓰기</a>
+            </div>
+
+
             <div class="col-md-1">
                 <form action="{% url 'members:logout' %}" method="POST">
                 {% csrf_token %}
@@ -30,23 +36,33 @@
             <div class="card col-sm-12 post-layout">
                 <div class="card-body">
                     <div class="row post-header">
-                        <div class="col-sm-4">
-                            {% if post.author.img_profile %}
-                            <img class="rounded-circle float-left" style="width:50px; height:50px;" src="{{ post.author.img_profile.url }}" alt="">
+                        {% if post.author.img_profile %}
+                        <img class="rounded-circle float-left" style="width:50px; height:50px;" src="{{ post.author.img_profile.url }}" alt="">
 
-                            {% else %}
-                            {% load static %}
-                            <img class="rounded-circle float-left" style="width:50px; height:50px;" src="{% static 'images/blank_user.jpg' %}" alt="">
+                        {% else %}
+                        {% load static %}
+                        <img class="rounded-circle float-left" style="width:50px; height:50px;" src="{% static 'images/blank_user.jpg' %}" alt="">
+                        {% endif %}
+                        <h3 class="card-title layout-user-name">{{post.author.username}}</h3>
+                        <form action="" method="POST" class="follow-btn">
+                        {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-primary ml-10">+follow</button>
+                        </form>
+
+                        <form action="{% url 'posts:post-like' post.pk %}" method="POST" class="follow-btn">
+                        {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-primary ml-10">Like</button>
+                        </form>
+                        <div class="follow-btn layout-post-like">
+                            {% if user.postlike_username %}
+                                <p>{{ user.postlike_username }}</p>
+                                <p>{{ user }} 님이 이 글을 좋아합니다.</p>
                             {% endif %}
-                            <h3 class="card-title layout-user-name">{{post.author.username}}</h3>
-                            <form action="" method="POST" class="follow-btn">
-                            {% csrf_token %}
-                                <button type="submit" class="btn btn-outline-primary ml-10">+follow</button>
-                            </form>
-
                         </div>
                     </div>
 
+
+                    {% if post.photo %}
                     <div class="row">
                         <div class="col-sm-12">
                             <div>
@@ -54,10 +70,10 @@
                                     <img class="rounded mx-auto d-block" src="{{post.photo.url}}" alt="">
                                 </a>
                             </div>
-
                         </div>
                     </div>
-                </div>
+                    {% endif %}
+                </div> <!--card body-->
             </div>
             {% endfor %}
         </div>
