@@ -1,8 +1,10 @@
 
+
 {% extends 'base.html' %}
+
 {% block content %}
 
-
+    {% include 'include/posts/header.html' %}
 
     <div class="container">
         {% if user.is_authenticated %}
@@ -30,74 +32,16 @@
                 </form>
             </div>
         </div>
-        {% endif %}
-
-            {% for post in post_list %}
-            <div class="card col-sm-12 post-layout">
-                <div class="card-body">
-                    <div class="row post-header">
-                        {% if post.author.img_profile %}
-                        <img class="rounded-circle float-left" style="width:50px; height:50px;" src="{{ post.author.img_profile.url }}" alt="">
-
-                        {% else %}
-                        {% load static %}
-                        <img class="rounded-circle float-left" style="width:50px; height:50px;" src="{% static 'images/blank_user.jpg' %}" alt="">
-                        {% endif %}
-                        <h3 class="card-title layout-user-name">{{post.author.username}}</h3>
-                        <form action="" method="POST" class="follow-btn">
-                        {% csrf_token %}
-                            <button type="submit" class="btn btn-outline-primary ml-10">+follow</button>
-                        </form>
-
-                        <form action="{% url 'posts:post-like' post.pk %}" method="POST" class="follow-btn">
-                        {% csrf_token %}
-                            <button type="submit" class="btn btn-outline-primary ml-10">Like</button>
-                        </form>
-                        <div class="follow-btn layout-post-like">
-                            {% if user.postlike_username %}
-                                <p>{{ user.postlike_username }}</p>
-                                <p>{{ user }} 님이 이 글을 좋아합니다.</p>
-                            {% endif %}
-                        </div>
-                    </div>
-
-
-                    {% if post.photo %}
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div>
-                                <a href="{% url 'posts:post-detail' post.id %}">
-                                    <img class="rounded mx-auto d-block" src="{{post.photo.url}}" alt="">
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    {% endif %}
-                </div> <!--card body-->
-            </div>
-            {% endfor %}
+        {% else %}
+        <div class="layout-header">
+            <a class="btn btn-primary" href="{% url 'members:login' %}">로그인</a>
+            <a class="btn btn-primary" href="{% url 'members:signup2' %}">회원가입</a>
         </div>
 
+        {% endif %}
+
+        {% for post in posts %}
+            {% include 'include/posts/post.html' %}
+        {% endfor %}
     </div>
-
-<script>
-
-    (function () {
-
-
-    }());
-
-    function withdraw () {
-
-            alert('회원탈퇴 완료');
-        };
-
-    var temp = document.getElementById('withdraw');
-
-    temp.addEventListener('click', e => {
-        withdraw();
-    })
-
-</script>
-
 {% endblock %}

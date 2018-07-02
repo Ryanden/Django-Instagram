@@ -1,9 +1,11 @@
+import requests
+import json
 from django.contrib.auth import authenticate, login, logout, get_user_model
-
 from django.shortcuts import render, redirect
 
 # User 클래스를 가져올때는 get_user_model()
 # Foreign Key 에 User 모델을 지정할때에는 settings.AUTO_USR_MODEL
+from config import settings
 from members.forms import SignupForm
 
 User = get_user_model()
@@ -76,6 +78,75 @@ def withdraw(request):
 
     request.user.delete()
 
+    return redirect('index')
+
+
+def facebook_login(request):
+
+    code = request.GET.get('code')
+    url = 'https://graph.facebook.com/v3.0/oauth/access_token?'
+
+    params = {
+        'client_id': settings.FACEBOOK_APP_ID,
+        'redirect_uri': 'http://localhost:8000/members/facebook-login/',
+        'client_secret': settings.FACEBOOK_APP_SECRET_CODE,
+        'code': code,
+    }
+
+    response = requests.get(url, params)
+
+    # json 모듈을 사용하여 json 형식의 텍스트를 파이썬 오브젝트로 변환
+    response_dict = response.json()
+
+    # access_token 을 저장
+    access_token = response_dict.get('access_token')
+
+    url = 'https://graph.facebook.com/debug_token?'
+    params = {
+        'input_token': access_token,
+        'access_token': '{}|{}'.format(settings.FACEBOOK_APP_ID, settings.FACEBOOK_APP_SECRET_CODE),
+    }
+
+    response = requests.get(url, params)
+
+
+    # GraphAPI 를 통해서 facebook user 의 정보 받아오기
+
+    url = 'https://graph.facebook.com/v3.0/me'
+
+    params = {
+        'fields': ','.join([
+            'id',
+            'name',
+            'first_name',
+            'last_name',
+            'picture',
+        ]),
+        'access_token': access_token,
+    }
+
+    response = requests.get(url, params)
+
+    response_dict = response.json()
+
+    facebook_user_id = response_dict.get('id')
+    first_name = response_dict['first_name']
+    last_name = response_dict['last_name']
+    url_img_profile = response_dict['picture']['data']['url']
+
+    user, user_create = User.objects.get_or_create(
+        username=facebook_user_id,
+        defaults={
+            'first_name': first_name,
+            'last_name': last_name
+        }
+    )
+
+    if user_create:
+        user.first_name = first_name
+        user.last_name = last_name
+        user.save()
+    login(request, user)
     return redirect('index')
 
 

@@ -92,23 +92,7 @@
 
 
     <div>
-        <div class="row">
-            <div class="col-md-5">
-                <a class="layout-center layout-title" href="{% url 'index' %}">
-                    {% load static %}
-                    <img class="rounded-circle float-left" style="width:50px; height:50px;" src="{% static 'images/logo.jpg' %}" alt="">
-                    Instagram
-                </a>
-            </div>
-        </div>
-        {% if user.is_authenticated %}
 
-        {% else %}
-        <div class="layout-header">
-            <a class="btn btn-primary" href="{% url 'members:login' %}">로그인</a>
-            <a class="btn btn-primary" href="{% url 'members:signup2' %}">회원가입</a>
-        </div>
-        {% endif %}
 
         {% block content %}
         {% endblock %}

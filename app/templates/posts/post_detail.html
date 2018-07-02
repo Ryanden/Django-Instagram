@@ -2,6 +2,8 @@
 
 {% block content %}
 
+{% include 'include/posts/header.html' %}
+
 <div class="container">
 
     <div class="row">
@@ -11,45 +13,70 @@
             </div>
         </div>
         <div class="col-md-6">
-            {% if post.author.img_profile %}
-                            <img class="rounded-circle float-left" style="width:50px; height:50px;" src="{{ post.author.img_profile.url }}" alt="">
 
-                            {% else %}
-                            {% load static %}
-                            <img class="rounded-circle float-left" style="width:50px; height:50px;" src="{% static 'images/blank_user.jpg' %}" alt="">
+            <div class="row">
+                {% if post.author.img_profile %}
+                <img class="rounded-circle float-left" style="width:50px; height:50px;" src="{{ post.author.img_profile.url }}" alt="">
+
+                {% else %}
+                {% load static %}
+                <img class="rounded-circle float-left" style="width:50px; height:50px;" src="{% static 'images/blank_user.jpg' %}" alt="">
+                {% endif %}
+                <p> 블로그 저자 : {{post.author}}</p>
+            </div>
+
+            <div class="row">
+                <p> 블로그 내용 : {{post.content}}</p>
+
+            </div>
+
+
+
+            <div class="row">
+                <form class="float-left" action="{% url 'posts:comment-create' post_pk=post.id %}" method="POST">
+                {% csrf_token %}
+                    <input type="text" placeholder="댓글 달기" name="comment">
+                    <button type="submit" class="btn btn-success">댓글 등록</button>
+                </form>
+
+                <form class="" action="{% url 'posts:post-delete' pk=post.id %}" method="POST">
+                {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">글삭제</button>
+                </form>
+            </div>
+
+
+            <!-- comment 가 있으면 유저이미지 가져오기 -->
+            {% for user in user.commented_user.all %}
+            {% if user.img_profile and post.comments_of_post.all %}
+            <div class="row">
+                {{ user.commented_user}}
+                <div class="col-md-6">
+                    <img class="rounded-circle float-left" style="width:50px; height:50px;" src="{{ user.img_profile.url }}" alt="">
+                    <div>
+                        <p class="layout-user-name">{{ user.username }}</p>
+                    </div>
+            {% elif not user.img_profile and post.comments_of_post.all %}
+                {% load static %}
+                    <img class="rounded-circle float-left" style="width:50px; height:50px;" src="{% static 'images/blank_user.jpg' %}" alt="">
+                    <div>
+                        <p class="layout-user-name">{{ user.username }}</p>
+                    </div>
             {% endif %}
-            <p> 블로그 저자 : {{post.author}}</p>
-            <p> 블로그 내용 : {{post.content}}</p>
-
-            <form class="" action="{% url 'posts:comment-create' pk=post.id %}" method="POST">
-            {% csrf_token %}
-                <input type="text" placeholder="댓글 달기" name="comment">
-                <button type="submit" class="btn btn-success">댓글 등록</button>
-            </form>
-            {% for comment in post.comments.all %}
-                <div class="row">
-                    <p class="float-left">{{ comment }}</p>
-                    <form class="float-left" action="{% url 'posts:comment-delete' post.pk comment.pk %}" method="POST">
-                    {% csrf_token %}
-
-                        <button type="submit" class="delete-btn">X</button>
-                    </form>
-                    <form class="float-left" action="{% url 'posts:comment-like' post.pk comment.pk %}" method="POST">
-                    {% csrf_token %}
-
-                        <button type="submit" class="delete-btn">좋아요</button>
-                    </form>
-                </div>
             {% endfor %}
-
-            {% if user.comment_like %}
-                {{ user.comment_like.all}}
-            {% endif %}
-
-            <form class="" action="{% url 'posts:post-delete' pk=post.id %}" method="POST">
-            {% csrf_token %}
-                <button type="submit" class="btn btn-danger">글삭제</button>
-            </form>
+                    <ul>
+                    {% for comment in post.comments.all %}
+                        <li>
+                        {{comment}}
+                            <form class="" action="{% url 'posts:comment-delete' post.pk comment.pk %}" method="POST">
+                            {% csrf_token %}
+                                <button type="submit" class="delete-btn">X</button>
+                            </form>
+                        </li>
+                    {% endfor%}
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
 </div>

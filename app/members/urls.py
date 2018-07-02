@@ -10,4 +10,5 @@ urlpatterns = [
    path('signup', views.signup_bak, name='signup'),
    path('signup2', views.signup, name='signup2'),
    path('withdraw', views.withdraw, name='withdraw'),
+   path('facebook-login/', views.facebook_login, name='facebook_login'),
 ]

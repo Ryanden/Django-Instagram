@@ -22,6 +22,12 @@ class Post(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
 
+    like_users = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        blank=True,
+        related_name='like_posts',
+    )
+
     class Meta:
         ordering = ['-pk']
 

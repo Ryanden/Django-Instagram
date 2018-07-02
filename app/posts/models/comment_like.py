@@ -19,7 +19,7 @@ class CommentLike(models.Model):
     comment = models.ForeignKey(
         Comment,
         on_delete=models.CASCADE,
-        related_name='comments'
+        related_name='in_comment'
     )
 
     created_at = models.DateTimeField(auto_now_add=True)
