@@ -8,6 +8,7 @@ User = get_user_model()
 
 __all__ = (
     'signup',
+    'signup_bak',
 )
 
 
@@ -18,7 +19,7 @@ def signup(request):
         # 에러메시지가 없음
         if form.is_valid():
             user = form.signup()
-            login(request, user)
+            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
             return redirect('index')
     # get 요청일 때 빈 form 을 전달해서 렌더링
     else:

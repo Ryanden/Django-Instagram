@@ -31,9 +31,18 @@ ALLOWED_HOSTS = []
 # Auth
 AUTH_USER_MODEL = 'members.User'
 LOGIN_URL = 'members:login'
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'members.backends.FacebookBackend'
+]
 
+# FaceBook
 FACEBOOK_APP_ID = '192070051480669'
 FACEBOOK_APP_SECRET_CODE = 'c38eb1c86792b61296c4230f8d9b9460'
+
+# Admin
+# ADMIN_LOGIN = 'admin'
+# ADMIN_PASSWORD =
 
 # STATIC
 
