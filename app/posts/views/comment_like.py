@@ -11,6 +11,7 @@ def comment_like(request, post_pk, comment_pk):
 
         comment = Comment.objects.get(pk=comment_pk)
 
+        print(comment)
         # # commentlike 를 요청한 유저와 현재 유저의 비교
         # if request.user.commentlike_user == request.user:
         #
