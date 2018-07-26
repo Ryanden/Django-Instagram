@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_extensions',
 
+    'rest_framework',
     'members.apps.MembersConfig',
 ]
 

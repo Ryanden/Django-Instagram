@@ -9,6 +9,7 @@ pillow = "*"
 django-extensions = "*"
 "psycopg2-binary" = "*"
 requests = "*"
+django-rest-framework = "*"
 
 [dev-packages]
 ipython = "*"
