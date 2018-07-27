@@ -24,12 +24,12 @@ from . import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # path('posts/', include('posts.urls')),
-    # path('members/', include('members.urls')),
+    path('posts/', include('posts.urls.views')),
+    path('members/', include('members.urls.views')),
     path('', views.index, name='index'),
     path('api/', include([
-        path('posts/', include('posts.urls')),
-        path('users/', include('members.urls')),
+        path('posts/', include('posts.urls.apis')),
+        path('users/', include('members.urls.apis')),
     ]))
     # path('media/<str:path>', admin.site.urls),
 ] + static(

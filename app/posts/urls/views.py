@@ -1,14 +1,14 @@
 from django.urls import path
 
-from posts.apis.api_view import PostCreate
+# from posts.apis.api_view import PostCreate
 
 
-from . import views
+from .. import views
 
 app_name = 'posts'
 
 urlpatterns = [
-   path('create/', PostCreate.as_view()),
+   # path('create/', PostCreate.as_view()),
    path('', views.post_list, name='post-list'),
    path('<int:pk>', views.post_detail, name='post-detail'),
    path('create', views.post_create, name='post-create'),
