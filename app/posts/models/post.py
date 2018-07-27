@@ -13,7 +13,7 @@ class Post(models.Model):
 
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
     )
 
     photo = models.ImageField(upload_to='post', blank=True)

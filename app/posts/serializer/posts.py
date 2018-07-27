@@ -1,3 +1,4 @@
+from members.serializer import UserSerializer
 from ..models import Post
 from rest_framework import serializers
 
@@ -7,6 +8,8 @@ __all__ = (
 
 
 class PostBaseSerializer(serializers.ModelSerializer):
+    author = UserSerializer(required=False)
+
     class Meta:
         model = Post
         fields = (
@@ -16,4 +19,8 @@ class PostBaseSerializer(serializers.ModelSerializer):
             'content',
             'created_at',
             'like_users',
+        )
+
+        read_only_fields = (
+            'author',
         )

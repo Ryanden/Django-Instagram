@@ -1,6 +1,11 @@
+import json
+import random
+
 from django.contrib.auth import get_user_model
 from django.db import IntegrityError
 from django.test import TestCase, TransactionTestCase
+from rest_framework import status
+from rest_framework.test import APITestCase
 
 from posts.models import Post, Comment
 from posts.models.comment_like import CommentLike
@@ -8,79 +13,73 @@ from posts.models.comment_like import CommentLike
 User = get_user_model()
 
 
-class PostTestCase(TransactionTestCase):
+#
+# class PostTestCase(TransactionTestCase):
+#
+#     def create_dummy_user(self, num):
+#         return [User.objects.create_user(username=f"u{x + 1}") for x in range(num)]
+#
+#     def test_comment_like(self):
+#         # 유저가 하트버튼을 눌러 각 코멘트마다 좋아요 할 수 있도록 함
+#
+#         u1, u2 = self.create_dummy_user(2)
+#
+#         p1 = Post.objects.create(author=u1)
+#
+#         c1 = Comment.objects.create(post=p1, user=u1, content='1번코멘트')
+#
+#         # cl1 = CommentLike.objects.create(user=u2, comment=c1)
+#         #
+#         # comment_info = Comment.objects.get(pk=p1.pk)
+#         #
+#         # comment_like_info = CommentLike.objects.get(pk=u2.pk)
+#         #
+#         # print('코멘트 : ', comment_info)
+#         # print('코멘트 좋아요 : ', comment_like_info)
+#
+#         print('테스트코드')
 
-    def create_dummy_user(self, num):
 
-        return [User.objects.create_user(username=f"u{x + 1}") for x in range(num)]
-
-    def test_comment_like(self):
-
-        # 유저가 하트버튼을 눌러 각 코멘트마다 좋아요 할 수 있도록 함
-
-        u1, u2 = self.create_dummy_user(2)
-
-        p1 = Post.objects.create(author=u1)
-
-        c1 = Comment.objects.create(post=p1, user=u1, content='1번코멘트')
-
-        # cl1 = CommentLike.objects.create(user=u2, comment=c1)
-        #
-        # comment_info = Comment.objects.get(pk=p1.pk)
-        #
-        # comment_like_info = CommentLike.objects.get(pk=u2.pk)
-        #
-        # print('코멘트 : ', comment_info)
-        # print('코멘트 좋아요 : ', comment_like_info)
-
-        print('테스트코드')
+def get_dummy_user():
+    return User.objects.create_user(
+        username='dummy',
+        password='123',
+        gender='m'
+    )
 
 
-    #
-    # def test_follow_only_one(self):
-    #
-    #     u1, u2 = self.create_dummy_user(2)
-    #
-    #     u1.follow(u2)
-    #
-    #     try:
-    #         u1.follow(u2)
-    #     except DuplicateRelationException:
-    #         print('이미 팔로우 되어 있습니다.')
-    #
-    #     with self.assertRaises(DuplicateRelationException):
-    #         u1.follow(u2)
-    #
-    #     self.assertEqual(u1.following.count(), 1)
-    #
-    #     relation = u1.relations_by_from_user.create(to_user=u2, relation_type='f')
-    #
-    #     print(User.objects.filter(pk=u2.pk).exists())
-    #
-    #     u1 의 following에 u2가 포함되어있는지 확인
-    #     print('1번 확인')
-    #     self.assertIn(u2, u1.following)
-    #
-    #     # u1 의 following_relation 에서 to_user 가 u2인 relation
-    #     # self.following_relations.filter(to_user=u2).exists()
-    #     print('2번 확인', self.assertTrue(u1.following_relations.filter(to_user=u2).exists()))
-    #
-    #     # relation이 u1.following_relatons에 포함되어 있는지
-    #     self.assertIn(relation, u1.following_relations)
-    #
-    # def test_unfollow_only_follow_exist(self):
-    #
-    #     u1, u2 = self.create_dummy_user(2)
-    #
-    #     # u1 이 u2 를 언팔로우
-    #     u1.follow(u2)
-    #
-    #     u1.unfollow(u2)
-    #
-    #     self.assertNotIn(u2, u1.following)
-    #
-    # def test_unfollow_fail_if_follow_not_exist(self):
-    #     u1, u2 = self.create_dummy_user(2)
-    #
-    #     with self.assertRaises(RelationNotExist):
-    #         u1.unfollow(u2)
+def get_dummy_post(author):
+    return [Post.objects.create(author=author, content=f'{content}') for content in range(random.randint(1, 10))]
+
+
+class PostListTest(APITestCase):
+    URL = '/api/posts/'
+
+    CREATE_URL = '/api/posts/create/'
+
+    def test_post_list_status_code(self):
+        response = self.client.get(self.URL)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_post_list_count(self):
+        author = get_dummy_user()
+        get_dummy_post(author)
+
+        response = self.client.get(self.CREATE_URL)
+        data = json.loads(response.content)
+
+        # print(data)
+
+        self.assertEqual(len(data), Post.objects.count())
+
+    def test_post_list_order_by_create_descending(self):
+        author = get_dummy_user()
+        posts = get_dummy_post(author)
+
+        post_list = []
+        for item in posts:
+            post_list.append(item.pk)
+
+        self.assertEqual(post_list, list(Post.objects.order_by('created_at').values_list('pk', flat=True)))
+

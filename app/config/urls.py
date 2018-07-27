@@ -18,15 +18,19 @@ from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
 
-from posts.apis.api_view import PostList
+# from members.apis import UserList
+# from posts.apis.api_view import PostList
 from . import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('posts/', include('posts.urls')),
-    path('members/', include('members.urls')),
+    # path('posts/', include('posts.urls')),
+    # path('members/', include('members.urls')),
     path('', views.index, name='index'),
-    path('api/posts/', PostList.as_view(), name='post-list-api'),
+    path('api/', include([
+        path('posts/', include('posts.urls')),
+        path('users/', include('members.urls')),
+    ]))
     # path('media/<str:path>', admin.site.urls),
 ] + static(
     prefix=settings.MEDIA_URL,

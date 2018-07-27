@@ -2,12 +2,14 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from ..models import Post
 from ..serializer import PostBaseSerializer
+from rest_framework import generics
 
 
-class PostList(APIView):
+class PostList(generics.ListAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostBaseSerializer
 
-    def get(self, request, format=None):
-        post = Post.objects.all()
-        serializer = PostBaseSerializer(post, many=True)
 
-        return Response(serializer.data)
+class PostCreate(generics.ListCreateAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostBaseSerializer
