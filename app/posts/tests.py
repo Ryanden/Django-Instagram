@@ -83,3 +83,6 @@ class PostListTest(APITestCase):
 
         self.assertEqual(post_list, list(Post.objects.order_by('created_at').values_list('pk', flat=True)))
 
+
+    def test_post_create(self):
+        self
