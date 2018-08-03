@@ -1,8 +1,5 @@
 from django.urls import path
 
-# from posts.apis.api_view import PostCreate
-
-
 from .. import views
 
 app_name = 'posts'

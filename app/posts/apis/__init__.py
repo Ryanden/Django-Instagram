@@ -21,8 +21,6 @@
 # 6. 실행확인
 
 
-from rest_framework.response import Response
-from rest_framework.views import APIView
 from ..models import Post
 from ..serializer import PostBaseSerializer
 from rest_framework import generics
