@@ -82,3 +82,15 @@ class FacebookAuthToken(APIView):
         # 전달받은 facebook_id에 해당하는 유저가 존재 한다면 해당 User 의 토큰값을 반환
         # 존재하지 않든다면 first_name 과 last_name 값을 추가로 사용해 생성한 User 에
         #   -> 해당하는 Token 을 가져오거나 새로 생성해서 리턴
+
+
+class Profile(APIView):
+    def get(self, request):
+        if request.user.is_authenticated:
+            return Response(UserSerializer(request.user).data)
+
+        raise NotAuthenticated('인증 되어 있지 않습니다.')
+        # request.user 가 인증되어 있으면
+        # UserSerializer 로 serialize 한 결과를 리턴
+        # 인증이 되어있지 않다면 HttpNotAuthorized 예외 발생
+
