@@ -15,6 +15,8 @@ class UserSerializer(serializers.ModelSerializer):
             'site',
             'introduction',
             'gender',
-            'to_relation_users'
+            'to_relation_users',
+            'last_name',
+            'first_name',
         )
 

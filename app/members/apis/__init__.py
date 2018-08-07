@@ -40,3 +40,45 @@ class AuthenticationTest(APIView):
             return Response(UserSerializer(request.user).data)
 
         raise NotAuthenticated('로그인 되어있지 않습니다.')
+
+
+class FacebookAuthToken(APIView):
+    def post(self, request):
+        print('data 출력: ', request.data)
+
+        facebook_id = request.data.get('facebook_id')
+        last_name = request.data.get('last_name')
+        first_name = request.data.get('first_name')
+
+        user, __ = User.objects.get_or_create(
+            username=facebook_id,
+            defaults={
+                'last_name': last_name,
+                'first_name': first_name,
+            }
+        )
+
+        # if User.objects.filter(username=facebook_id).exists():
+        #     user = User.objects.get(username=facebook_id)
+        #
+        # else:
+        #     user =User.objects.create_user(
+        #         username=facebook_id,
+        #         first_name=first_name,
+        #         last_name=last_name,
+        #     )
+        token, __ = Token.objects.get_or_create(user=user)
+        data = {
+            'token': token.key,
+            'user': UserSerializer(user).data
+        }
+        return Response(data)
+
+        # raise AuthenticationFailed('인증 정보가 올바르지 않습니다.')
+
+        # raise AuthenticationFailed('인증 정보가 올바르지 않습니다.')
+
+        # request.data 에 'facebook_id' 와 'first-name, last-name' 이 올 것으로 예상
+        # 전달받은 facebook_id에 해당하는 유저가 존재 한다면 해당 User 의 토큰값을 반환
+        # 존재하지 않든다면 first_name 과 last_name 값을 추가로 사용해 생성한 User 에
+        #   -> 해당하는 Token 을 가져오거나 새로 생성해서 리턴
